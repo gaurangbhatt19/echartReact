@@ -41,8 +41,6 @@ const Legend:React.FC = () => {
               <h3>{item.name}</h3>
               <h3>{item.value}</h3>
               <h3>{Math.floor((item.value/totalValue)*100)} %</h3>
-            
-              
             </li>
             )
           })
