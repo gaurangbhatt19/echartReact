@@ -4,14 +4,12 @@ import { atomChart, colorList, values } from '../recoil/atom'
 
 const Legend:React.FC<{handleFilter:any}> = (props:{handleFilter:any}) => {
   type itemType={
+    color: string;
+    render: boolean;
     value: number;
     name: string;
 }
   const colorCode=colorList
-  let totalValue=values.reduce((acc,current)=>{
-    acc+=current.value
-    return acc
-  },0)
 
   const [alteredAtom,setAlteredAtom]=useRecoilState(atomChart)
   let atomValue=useRecoilValue(atomChart)
@@ -25,12 +23,20 @@ const Legend:React.FC<{handleFilter:any}> = (props:{handleFilter:any}) => {
     }}>
       <ul style={{marginLeft:"-2em"}}>
         {
-          alteredAtom.map((item:any,index:number)=>{
+          alteredAtom?.map((item:itemType,index:number)=>{
           
             return(
-            <li key={index} className={!item.render?"disabled":undefined} style={{display:"grid",justifyContent:"center",gridTemplateColumns:"1fr 2fr 1fr"}} onClick={()=>{
+            <li key={index} className={!item.render?"disabled":undefined} style={{
+              display:"grid",
+              justifyContent:"center",
+              gridTemplateColumns:"1fr 2fr 1fr"
+            }} 
+            
+            onClick={()=>{
               let values=atomValue
-              var js:any=[]
+              var js:itemType[]=[]
+
+
               if(item.render){
                 for(let i=0;i<values.length;i++){
                 if(values[i].name===item.name){
@@ -57,11 +63,21 @@ const Legend:React.FC<{handleFilter:any}> = (props:{handleFilter:any}) => {
               setAlteredAtom(js)
             }}>
               <div style={{display:"flex",justifyContent:"center"}}>
-                <div style={{backgroundColor: !item.render?"rgb(84, 167, 167)":colorCode[index], width:"2em",height:"2em",borderRadius:"7px",marginTop:"18%"}}></div>
+                <div style={{
+                  backgroundColor: !item.render?"rgb(84, 167, 167)":colorCode[index],
+                   width:"2em",
+                   height:"2em",
+                   borderRadius:"7px",
+                   marginTop:"18%"
+                   }}>
+                  
+                </div>
               </div>
+
               <div style={{display:"flex",justifyContent:"start"}}>
                 <h3>{item.name}</h3>
               </div>
+              
               <div style={{display:"flex",justifyContent:"start"}}>
                 <h3>{item.value}</h3>
               </div>
