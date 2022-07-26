@@ -4,7 +4,7 @@ import { atomChart, chartValues, colorList, values } from '../recoil/atom';
 import { useRecoilValue } from 'recoil';
 const Chart:React.FC<{filter: string[]}> = (props:{filter: string[]}) => {
 let atomvalue=useRecoilValue(atomChart)
-let totalValue=atomvalue.reduce((sum,val) => {
+let totalValue=atomvalue.filter(value=>value.render).reduce((sum,val) => {
   return sum+val.value
 },0)
 const style = {
