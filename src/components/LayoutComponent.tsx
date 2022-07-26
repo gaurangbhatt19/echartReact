@@ -11,12 +11,15 @@ const LayoutComponent:React.FC = () => {
   return (
     <>
     <div className="container">
+
     <div id="container_left">
         <Chart filter={filter}/>
     </div>
+
     <div id="container_right">
         <Legend handleFilter={handleFilter}/>
     </div>
+    
     </div>
     </>
   )
