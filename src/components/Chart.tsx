@@ -4,7 +4,9 @@ import { atomChart, chartValues, colorList, values } from '../recoil/atom';
 import { useRecoilValue } from 'recoil';
 const Chart:React.FC<{filter: string[]}> = (props:{filter: string[]}) => {
 let atomvalue=useRecoilValue(atomChart)
-
+let totalValue=atomvalue.reduce((sum,val) => {
+  return sum+val.value
+},0)
 const style = {
   height: "100%",
   width: "100%"
@@ -16,6 +18,17 @@ const option = {
   },
   color:atomvalue.filter(value=>value.render).map(item=>item.color)
   ,
+  title:[
+    {
+      text: 'Total Sales\n\n'+totalValue,
+      left: '50%',
+      top:"43%",
+      textAlign: 'center',
+      textStyle:{
+        fontSize:"2em"
+      }
+    }
+  ],
   series: [
     {
       name: 'Access From',
@@ -31,20 +44,6 @@ const option = {
         show: false,
         position: 'center'
       },
-      emphasis: {
-        label: {
-          show: true,
-          fontSize: '33',
-          fontWeight: 'bold',
-          formatter:(d:any)=>{
-            return d.value.toString()+"\n\n"+d.name.toString();
-          }
-        }
-      },
-      labelLine: {
-        show: false
-      },
-      // values.filter(value => !props.filter.includes(value.name))
       data: atomvalue.filter(value => value.render).map(value => value)
     }
   ]
