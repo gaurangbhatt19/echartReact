@@ -1,7 +1,8 @@
 import React from 'react'
-import { colorList, values } from '../recoil/atom'
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { atomChart, colorList, values } from '../recoil/atom'
 
-const Legend:React.FC = () => {
+const Legend:React.FC<{handleFilter:any}> = (props:{handleFilter:any}) => {
   type itemType={
     value: number;
     name: string;
@@ -11,6 +12,9 @@ const Legend:React.FC = () => {
     acc+=current.value
     return acc
   },0)
+
+  const [alteredAtom,setAlteredAtom]=useRecoilState(atomChart)
+  let atomValue=useRecoilValue(atomChart)
   return (
     <div style={{
       border:"2px solid cyan",
@@ -20,27 +24,48 @@ const Legend:React.FC = () => {
       backgroundColor:"rgb(0, 255, 255,0.1)"
     }}>
       <ul style={{marginLeft:"-2em"}}>
-      <li style={{display:"grid",justifyContent:"center",gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
-              <h3>Color</h3>
-              <h3>Name</h3>
-              <h3>Value</h3>
-              <h3>Share %</h3>
-            
-              
-            </li>
         {
-          values.map((item:itemType,index:number)=>{
+          alteredAtom.map((item:any,index:number)=>{
           
             return(
-            <li key={index} style={{display:"grid",justifyContent:"center",gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
+            <li key={index} className={!item.render?"disabled":undefined} style={{display:"grid",justifyContent:"center",gridTemplateColumns:"1fr 2fr 1fr"}} onClick={()=>{
+              let values=atomValue
+              var js:any=[]
+              if(item.render){
+                for(let i=0;i<values.length;i++){
+                if(values[i].name===item.name){
+                   js.push({
+                    ...values[i],
+                    render:false
+                  })
+                }else{
+                  js.push(values[i])
+                }
+              }
+              }else{
+                for(let i=0;i<values.length;i++){
+                  if(values[i].name===item.name){
+                     js.push({
+                      ...values[i],
+                      render:true
+                    })
+                  }else{
+                    js.push(values[i])
+                  }
+              }
+            }
+              setAlteredAtom(js)
+            }}>
               <div style={{display:"flex",justifyContent:"center"}}>
-                <div style={{backgroundColor: colorCode[index], width:"2em",height:"2em",borderRadius:"7px",marginTop:"18%"}}></div>
+                <div style={{backgroundColor: !item.render?"rgb(84, 167, 167)":colorCode[index], width:"2em",height:"2em",borderRadius:"7px",marginTop:"18%"}}></div>
+              </div>
+              <div style={{display:"flex",justifyContent:"start"}}>
+                <h3>{item.name}</h3>
+              </div>
+              <div style={{display:"flex",justifyContent:"start"}}>
+                <h3>{item.value}</h3>
               </div>
               
-              
-              <h3>{item.name}</h3>
-              <h3>{item.value}</h3>
-              <h3>{Math.floor((item.value/totalValue)*100)} %</h3>
             </li>
             )
           })

@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactECharts from 'echarts-for-react';
-import { colorList, values } from '../recoil/atom';
-const Chart:React.FC = () => {
+import { atomChart, chartValues, colorList, values } from '../recoil/atom';
+import { useRecoilValue } from 'recoil';
+const Chart:React.FC<{filter: string[]}> = (props:{filter: string[]}) => {
+let atomvalue=useRecoilValue(atomChart)
 
 const style = {
   height: "100%",
@@ -12,13 +14,13 @@ const option = {
   tooltip: {
     trigger: 'item'
   },
-  color:colorList
+  color:atomvalue.filter(value=>value.render).map(item=>item.color)
   ,
   series: [
     {
       name: 'Access From',
       type: 'pie',
-      radius: ['50%', '90%'],
+      radius: ['55%', '90%'],
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10,
@@ -33,13 +35,17 @@ const option = {
         label: {
           show: true,
           fontSize: '33',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          formatter:(d:any)=>{
+            return d.value.toString()+"\n\n"+d.name.toString();
+          }
         }
       },
       labelLine: {
         show: false
       },
-      data: values
+      // values.filter(value => !props.filter.includes(value.name))
+      data: atomvalue.filter(value => value.render).map(value => value)
     }
   ]
 };

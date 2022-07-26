@@ -55,3 +55,15 @@
   height: 100%;
 
 }
+li:hover{
+cursor: pointer;
+background-color: rgb(0, 255, 255,0.5);
+border-radius: 1em;
+}
+li:disabled{
+  color: cadetblue;
+  
+}
+.disabled{
+color: rgb(84, 167, 167)
+}
