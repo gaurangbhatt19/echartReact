@@ -1,23 +1,21 @@
 import React, { useState } from 'react'
+import { chartValues } from '../db'
+import { chartValuesType } from '../types/valueTypes'
 import Chart from './Chart'
 import Legend from './Legend'
 
 const LayoutComponent:React.FC = () => {
-  const [filter,setFilter]=useState<string[]>([])
-  function handleFilter(text:string){
-    setFilter([text,...filter])
-  }
-  
+  const [filterValues,setFilterValues]=useState<chartValuesType[]>(chartValues)
   return (
     <>
     <div className="container">
 
     <div id="container_left">
-        <Chart filter={filter}/>
+        <Chart filterValues={filterValues}/>
     </div>
 
     <div id="container_right">
-        <Legend handleFilter={handleFilter}/>
+        <Legend setFilterValues={setFilterValues} filterValues={filterValues} />
     </div>
     
     </div>

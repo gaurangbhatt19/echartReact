@@ -1,11 +1,9 @@
 import React from 'react'
 import ReactECharts from 'echarts-for-react';
-import { atomChart} from '../recoil/atom';
-import { useRecoilValue } from 'recoil';
-const Chart:React.FC<{filter: string[]}> = (props:{filter: string[]}) => {
+import { chartValuesType } from '../types/valueTypes';
+const Chart:React.FC<{filterValues:chartValuesType[]}> = (props:{filterValues:chartValuesType[]}) => {
 
-let atomvalue=useRecoilValue(atomChart)
-let totalValue=atomvalue.filter(value=>value.render).reduce((sum,val) => {
+let totalValue=props.filterValues.filter(value=>value.render).reduce((sum,val) => {
   return sum+val.value
 },0)
 
@@ -18,7 +16,7 @@ const option = {
   tooltip: {
     trigger: 'item'
   },
-  color:atomvalue.filter(value=>value.render).map(item=>item.color)
+  color:props.filterValues.filter(value=>value.render).map(item=>item.color)
   ,
   title:[
     {
@@ -46,7 +44,7 @@ const option = {
         show: false,
         position: 'center'
       },
-      data: atomvalue.filter(value => value.render).map(value => value)
+      data: props.filterValues.filter(value => value.render).map(value => value)
     }
   ]
 };

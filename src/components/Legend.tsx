@@ -1,18 +1,10 @@
 import React from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { atomChart, colorList, values } from '../recoil/atom'
+import { colorList } from '../db'
+import { chartValuesType } from '../types/valueTypes';
 
-const Legend:React.FC<{handleFilter:any}> = (props:{handleFilter:any}) => {
-  type itemType={
-    color: string;
-    render: boolean;
-    value: number;
-    name: string;
-}
+const Legend:React.FC<{setFilterValues:any,filterValues:any}> = (props:{setFilterValues:any,filterValues:any}) => {
+
   const colorCode=colorList
-
-  const [alteredAtom,setAlteredAtom]=useRecoilState(atomChart)
-  let atomValue=useRecoilValue(atomChart)
 
   const classes={
     legendDiv:{
@@ -39,14 +31,14 @@ const Legend:React.FC<{handleFilter:any}> = (props:{handleFilter:any}) => {
     <div style={classes.legendDiv}>
       <ul style={{marginLeft:"-2em"}}>
         {
-          alteredAtom?.map((item:itemType,index:number)=>{
+          props.filterValues?.map((item:chartValuesType,index:number)=>{
           
             return(
             <li key={index} className={!item.render?"disabled":undefined} style={classes.listElement} 
             
             onClick={()=>{
-              let values=atomValue
-              var atomJs:itemType[]=[]
+              let values=props.filterValues
+              var atomJs:chartValuesType[]=[]
 
 
               if(item.render){
@@ -73,7 +65,7 @@ const Legend:React.FC<{handleFilter:any}> = (props:{handleFilter:any}) => {
               }
             }
 
-              setAlteredAtom(atomJs)
+              props.setFilterValues(atomJs)
             }}>
               <div style={{display:"flex",justifyContent:"center"}}>
                 <div style={{
